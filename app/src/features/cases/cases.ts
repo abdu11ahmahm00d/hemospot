@@ -123,3 +123,38 @@ export async function transitionCase(input: {
   if (error) return { error: error.message }
   return { error: null }
 }
+
+/**
+ * Analysts a case can be assigned to. Admins see the whole directory through
+ * the admin profile policy; lead investigators see analyst rows through the
+ * directory policy; everyone else gets an empty list from RLS, not an error.
+ */
+export type AnalystDirectoryEntry = { id: string; full_name: string }
+
+export async function listAnalysts(): Promise<AnalystDirectoryEntry[]> {
+  if (!supabase) return []
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, full_name")
+    .eq("role", "analyst")
+    .order("full_name")
+  if (error || !data) return []
+  return data
+}
+
+/**
+ * Point a case at one analyst (or clear it back to the shared pool). The
+ * database owns the permission: only the case creator or an admin passes the
+ * update policy, so a denied save surfaces here as an error, never silently.
+ */
+export async function assignCase(
+  caseId: string,
+  analystId: string | null,
+): Promise<{ error: string | null }> {
+  if (!supabase) return { error: "Supabase is not configured." }
+  const { error } = await supabase
+    .from("cases")
+    .update({ assigned_to: analystId })
+    .eq("id", caseId)
+  return { error: error?.message ?? null }
+}

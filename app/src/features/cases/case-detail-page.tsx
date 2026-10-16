@@ -17,10 +17,14 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { useMyRole } from "@/features/auth/use-my-role"
+import { useSession } from "@/features/auth/use-session"
 import {
   NEXT_STATUS,
+  assignCase,
   fetchCaseWithTransitions,
+  listAnalysts,
   transitionCase,
+  type AnalystDirectoryEntry,
   type CaseStatus,
 } from "@/features/cases/cases"
 import type { Database } from "@/lib/database.types"
@@ -44,12 +48,18 @@ export function CaseDetailPage() {
   const [note, setNote] = useState("")
   const [isMoving, setIsMoving] = useState(false)
   const [moveError, setMoveError] = useState<string | null>(null)
+  const { session } = useSession()
+  const [staff, setStaff] = useState<AnalystDirectoryEntry[]>([])
+  const [assigneeId, setAssigneeId] = useState<string | null>(null)
+  const [isAssigning, setIsAssigning] = useState(false)
+  const [assignError, setAssignError] = useState<string | null>(null)
 
   const reload = useCallback(() => {
     if (!caseId) return
     setIsLoading(true)
     fetchCaseWithTransitions(caseId).then(({ caseRow: row, transitions: rows, error }) => {
       setCaseRow(row)
+      setAssigneeId(row?.assigned_to ?? null)
       setTransitions(rows)
       setLoadError(error)
       setIsLoading(false)
@@ -88,6 +98,35 @@ export function CaseDetailPage() {
 
   const nextStatus = NEXT_STATUS[caseRow.status as CaseStatus] ?? null
   const mayMove = role !== null && CAN_MOVE.has(role) && nextStatus !== null
+  const mayAssign =
+    caseRow !== null &&
+    (role === "admin" ||
+      (role === "lead_investigator" && caseRow.created_by === session?.user?.id))
+
+  useEffect(() => {
+    if (mayAssign) {
+      void listAnalysts().then(setStaff)
+    }
+  }, [mayAssign])
+
+  async function saveAssignment() {
+    if (!caseId) return
+    setIsAssigning(true)
+    setAssignError(null)
+    const { error } = await assignCase(caseId, assigneeId)
+    setIsAssigning(false)
+    if (error) {
+      setAssignError(error)
+      return
+    }
+    reload()
+  }
+
+  const assigneeName =
+    caseRow.assigned_to !== null
+      ? (staff.find((person) => person.id === caseRow.assigned_to)?.full_name ??
+        caseRow.assigned_to.slice(0, 8))
+      : null
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -131,6 +170,53 @@ export function CaseDetailPage() {
                 {isMoving ? "Moving…" : `Move to ${nextStatus}`}
               </Button>
             </form>
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {mayAssign ? (
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Assigned analyst</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col gap-3">
+              <p className="text-sm text-muted-foreground">
+                {assigneeName
+                  ? "Currently: " + assigneeName
+                  : "Currently unassigned - visible to no analyst in search."}
+              </p>
+              <label className="flex flex-col gap-1 text-sm">
+                Analyst
+                <select
+                  className="rounded-md border border-input bg-background px-3 py-2"
+                  value={assigneeId ?? ""}
+                  onChange={(event) => setAssigneeId(event.target.value === "" ? null : event.target.value)}
+                  aria-label="Assigned analyst"
+                >
+                  <option value="">Unassigned (shared pool)</option>
+                  {staff.map((person) => (
+                    <option key={person.id} value={person.id}>
+                      {person.full_name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {assignError ? (
+                <p className="text-sm text-destructive" role="alert">
+                  {assignError}
+                </p>
+              ) : null}
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-fit"
+                disabled={isAssigning}
+                onClick={() => void saveAssignment()}
+              >
+                {isAssigning ? "Saving…" : "Save assignment"}
+              </Button>
+            </div>
           </CardContent>
         </Card>
       ) : null}

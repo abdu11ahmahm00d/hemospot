@@ -216,6 +216,7 @@ export type Database = {
       }
       cases: {
         Row: {
+          assigned_to: string | null
           case_number: string
           created_at: string
           created_by: string
@@ -227,6 +228,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          assigned_to?: string | null
           case_number: string
           created_at?: string
           created_by: string
@@ -238,6 +240,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          assigned_to?: string | null
           case_number?: string
           created_at?: string
           created_by?: string
@@ -249,6 +252,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "cases_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "cases_created_by_fkey"
             columns: ["created_by"]
@@ -421,8 +431,51 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      case_in_review_lifecycle: {
+        Args: { check_case_id: string }
+        Returns: boolean
+      }
       current_role: { Args: never; Returns: string }
+      evidence_in_review_lifecycle: {
+        Args: { check_evidence_id: string }
+        Returns: boolean
+      }
       next_case_status: { Args: { current_status: string }; Returns: string }
+      search_cases: {
+        Args: {
+          from_date?: string
+          max_rows?: number
+          query_text: string
+          status_filter?: string
+          to_date?: string
+        }
+        Returns: {
+          case_number: string
+          created_at: string
+          description: string
+          id: string
+          rank: number
+          status: string
+          title: string
+        }[]
+      }
+      search_evidence: {
+        Args: {
+          from_date?: string
+          item_type_filter?: string
+          max_rows?: number
+          query_text: string
+          to_date?: string
+        }
+        Returns: {
+          case_id: string
+          created_at: string
+          file_name: string
+          id: string
+          item_type: string
+          rank: number
+        }[]
+      }
       transition_case_status: {
         Args: { p_case_id: string; p_note?: string; p_to_status: string }
         Returns: string
