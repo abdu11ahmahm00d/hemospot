@@ -25,16 +25,16 @@ type RequirementRow = {
 }
 
 const REQUIREMENT_ROWS: RequirementRow[] = [
-  { id: "FR1.1–1.2 cases + lifecycle", owner: "D2", state: "building" },
-  { id: "FR1.3 evidence + SHA-256", owner: "D3", state: "building" },
-  { id: "FR1.4 append-only custody", owner: "D3", state: "scaffolded" },
+  { id: "FR1.1–1.2 cases + lifecycle", owner: "D2", state: "done" },
+  { id: "FR1.3 evidence + SHA-256", owner: "D3", state: "done" },
+  { id: "FR1.4 append-only custody", owner: "D3", state: "done" },
   { id: "FR1.5–1.6 detect + classify", owner: "D1", state: "building" },
   { id: "FR1.7 routing + approval", owner: "D4", state: "scaffolded" },
   { id: "FR1.8 PDF report", owner: "D4", state: "scaffolded" },
   { id: "FR1.9 role-filtered search", owner: "D2", state: "scaffolded" },
   { id: "NFR1.1–1.2 RBAC + custody RLS", owner: "D2+D3", state: "scaffolded" },
   { id: "NFR1.3 ≤5s analysis", owner: "D1", state: "building" },
-  { id: "NFR1.4–1.5 retry + hashes", owner: "D3", state: "scaffolded" },
+  { id: "NFR1.4–1.5 retry + hashes", owner: "D3", state: "done" },
   { id: "NFR1.6–1.7 confidence + explanation", owner: "D1", state: "building" },
 ]
 
