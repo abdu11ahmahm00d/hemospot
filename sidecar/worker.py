@@ -25,9 +25,13 @@ BEHAVIOUR THAT MATTERS (read this before the code):
 import os
 import time
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 import httpx
+from dotenv import load_dotenv
 from supabase import create_client
+
+load_dotenv(Path(__file__).resolve().parent / ".env")
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
 SUPABASE_ANON_KEY = os.environ.get("SUPABASE_ANON_KEY", "")
