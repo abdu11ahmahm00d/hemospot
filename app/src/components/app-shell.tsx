@@ -20,6 +20,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { supabase } from "@/lib/supabase"
 import { useSession } from "@/features/auth/use-session"
+import { NotificationBell } from "@/features/notifications/notification-bell"
 
 const NAV_ITEMS = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -62,6 +63,7 @@ export function AppShell() {
           ))}
         </nav>
         <div className="mt-4 border-t pt-4">
+          <NotificationBell />
           <p className="truncate px-2 text-xs text-muted-foreground">
             {session?.user.email ?? ""}
           </p>
