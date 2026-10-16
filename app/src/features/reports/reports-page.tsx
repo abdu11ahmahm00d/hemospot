@@ -9,6 +9,7 @@
  */
 
 import { useEffect, useState } from "react"
+import { useSearchParams } from "react-router-dom"
 import { PDFDownloadLink } from "@react-pdf/renderer"
 import { FileText } from "lucide-react"
 
@@ -23,6 +24,7 @@ type CaseOption = { id: string; case_number: string; title: string }
 
 export function ReportsPage() {
   const { session } = useSession()
+  const [searchParams] = useSearchParams()
   const [options, setOptions] = useState<CaseOption[]>([])
   const [caseId, setCaseId] = useState("")
   const [report, setReport] = useState<CaseReport | null>(null)
@@ -37,6 +39,16 @@ export function ReportsPage() {
       )
     })
   }, [])
+
+  // Deep-linkable reports: /reports?case=<id> loads immediately, so a
+  // supervisor can bookmark or share a case's report URL.
+  useEffect(() => {
+    const linkedId = searchParams.get("case")
+    if (linkedId !== null && linkedId !== "") {
+      void loadReport(linkedId)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
 
   async function loadReport(selectedId: string) {
     setCaseId(selectedId)
