@@ -50,7 +50,7 @@ deliberate: the ML module is an enrichment, never a dependency of the case file.
 | ID | Name | Module | Code |
 |---|---|---|---|
 | D1 | Abdullah Mahmood | BPA ML sidecar — `/analyze`, `/explain`, model versioning + SHA-256, demo corpus | `sidecar/app/*` (not `stain_detection.py`, `feature_extraction.py` — those are verbatim research code) |
-| D2 | Md Galib Mahmud Aofi | Cases + RBAC — case CRUD, lifecycle transitions, timeline, auth, 5 roles | `app/src/features/cases/`, `app/src/features/search/`, `supabase/migrations/0001_init.sql` (cases half) |
+| D2 | Md Galib Mahmud Aofi | Cases + RBAC — case CRUD, lifecycle transitions, timeline, auth, 5 roles | `app/src/features/cases/`, `app/src/features/search/`, `supabase/migrations/` (cases half) |
 | D3 | Fatin Mahtab Nahin | Evidence + chain of custody — uploads, SHA-256 ingest, EXIF, append-only custody log, audit | `app/src/features/evidence/`, `app/src/features/custody/` |
 | D4 | Most. Mosaddika Mim | Reporting + notifications — PDF forensic report, templates, approval screens | `app/src/features/reports/`, `app/src/features/analyses/` (approval half) |
 | D5 | Farhana Yesmin | Frontend experience — dashboard, evidence viewer, result cards, responsive layout | `app/src/features/dashboard/`, `app/src/components/` |
@@ -64,6 +64,19 @@ deliberate: the ML module is an enrichment, never a dependency of the case file.
 5. The append-only custody log has **no UPDATE/DELETE policy on purpose** — that absence
    is the FR1.4/NFR1.2 proof.
 6. A missing Supabase `.env` shows a banner. Errors surface; no empty `catch`.
+
+## How to contribute (fork and pull request — no direct pushes)
+
+1. Fork the repo, clone your fork, create a branch named after your task
+   (`git checkout -b t-006-evidence-registry`).
+2. Build only inside your owned module (the table above). Read `CODE_STANDARDS.md`
+   first — it is short and it is enforced.
+3. Push the branch to YOUR fork and open a pull request against `main`.
+4. Every PR is reviewed before it merges: build plus typecheck must pass, no
+   secrets, permissions stay in RLS (never in app code), and each file names the
+   FR/NFR it serves. Fix review findings on the same branch; the PR updates itself.
+5. Only the lead merges. Never commit `.env`, keys, or passwords — they are
+   gitignored for a reason.
 
 ## Weekly cadence
 
