@@ -53,7 +53,9 @@ export type Database = {
           review_note: string
           reviewed_by: string | null
           stain_count: number | null
+          stains: Json
           status: string
+          timing_ms: number | null
           updated_at: string
           verdict: string | null
         }
@@ -70,7 +72,9 @@ export type Database = {
           review_note?: string
           reviewed_by?: string | null
           stain_count?: number | null
+          stains?: Json
           status?: string
+          timing_ms?: number | null
           updated_at?: string
           verdict?: string | null
         }
@@ -87,7 +91,9 @@ export type Database = {
           review_note?: string
           reviewed_by?: string | null
           stain_count?: number | null
+          stains?: Json
           status?: string
+          timing_ms?: number | null
           updated_at?: string
           verdict?: string | null
         }

@@ -17,6 +17,7 @@ import { CaseDetailPage } from "@/features/cases/case-detail-page"
 import { EvidencePage } from "@/features/evidence/evidence-page"
 import { CustodyPage } from "@/features/custody/custody-page"
 import { AnalysesPage } from "@/features/analyses/analyses-page"
+import { AnalysisDetailPage } from "@/features/analyses/analysis-detail-page"
 import { ReportsPage } from "@/features/reports/reports-page"
 import { SearchPage } from "@/features/search/search-page"
 import { isSupabaseConfigured } from "@/lib/supabase"
@@ -61,6 +62,7 @@ export function App() {
           <Route path="/evidence" element={<EvidencePage />} />
           <Route path="/custody" element={<CustodyPage />} />
           <Route path="/analyses" element={<AnalysesPage />} />
+          <Route path="/analyses/:analysisId" element={<AnalysisDetailPage />} />
           <Route path="/reports" element={<ReportsPage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />

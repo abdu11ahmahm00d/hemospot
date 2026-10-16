@@ -120,6 +120,8 @@ def run_job(db, job: dict) -> None:
                 "explanation": result["explanation"],
                 "model_sha256": result["model_sha256"],
                 "stain_count": result["stain_count"],
+                "stains": result["stains"],
+                "timing_ms": result["timing_ms"],
             }
         ).eq("id", job["analysis_id"]).execute()
 
