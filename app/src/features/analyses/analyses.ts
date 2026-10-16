@@ -113,8 +113,7 @@ export async function listAnalyses(): Promise<{
   }
 }
 
-/** One analysis with its evidence, its latest job, and a viewable photo URL. */
-export async function fetchAnalysisDetail(analysisId: string): Promise<{
+/** One analysis with its evidence, its latest job, and a viewable photo URL. */export async function fetchAnalysisDetail(analysisId: string): Promise<{
   analysis: AnalysisWithEvidence | null
   job: JobRow | null
   photoUrl: string | null
@@ -149,4 +148,60 @@ export async function fetchAnalysisDetail(analysisId: string): Promise<{
     return { analysis: typed, job: jobs[analysisId] ?? null, photoUrl: null, error: urlError.message }
   }
   return { analysis: typed, job: jobs[analysisId] ?? null, photoUrl: urlData.signedUrl, error: null }
+}
+
+export type ReviewDecision = "approved" | "rejected"
+
+/**
+ * Supervisor decision on finished work. The database owns the gate: only
+ * admin/reviewer roles, only from ready_for_review, reviewed_by forced to self.
+ * A rejection needs a note — the analyst must know what to redo.
+ */
+export async function reviewAnalysis(
+  analysisId: string,
+  decision: ReviewDecision,
+  note: string,
+): Promise<{ error: string | null }> {
+  if (!supabase) return { error: "Supabase is not configured." }
+  if (decision === "rejected" && note.trim() === "") {
+    return { error: "A rejection needs a note explaining what must change." }
+  }
+
+  const { data: userData } = await supabase.auth.getUser()
+  const userId = userData.user?.id
+  if (!userId) return { error: "Not signed in." }
+
+  const { error } = await supabase
+    .from("analyses")
+    .update({ status: decision, reviewed_by: userId, review_note: note.trim() })
+    .eq("id", analysisId)
+
+  return { error: error?.message ?? null }
+}
+
+export type RoutableStaff = { id: string; full_name: string; role: string }
+
+/** People an analysis can be routed to. Only admins can read profiles. */
+export async function listRoutableStaff(): Promise<RoutableStaff[]> {
+  if (!supabase) return []
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("id, full_name, role")
+    .in("role", ["analyst", "reviewer", "admin"])
+    .order("full_name")
+  if (error || !data) return []
+  return data
+}
+
+/** Route an analysis to one analyst (or clear the route). Admins only. */
+export async function routeAnalysis(
+  analysisId: string,
+  assigneeId: string | null,
+): Promise<{ error: string | null }> {
+  if (!supabase) return { error: "Supabase is not configured." }
+  const { error } = await supabase
+    .from("analyses")
+    .update({ assigned_to: assigneeId })
+    .eq("id", analysisId)
+  return { error: error?.message ?? null }
 }

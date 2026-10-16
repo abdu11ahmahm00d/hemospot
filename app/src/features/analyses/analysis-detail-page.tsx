@@ -15,6 +15,7 @@ import { Link, useParams } from "react-router-dom"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useMyRole } from "@/features/auth/use-my-role"
 import {
   fetchAnalysisDetail,
   type AnalysisWithEvidence,
@@ -22,6 +23,8 @@ import {
   type StainGeometry,
 } from "@/features/analyses/analyses"
 import { ResultCard } from "@/features/analyses/result-card"
+import { ReviewPanel } from "@/features/analyses/review-panel"
+import { RoutePanel } from "@/features/analyses/route-panel"
 import { StainOverlay } from "@/features/analyses/stain-overlay"
 import type { Database } from "@/lib/database.types"
 
@@ -56,6 +59,7 @@ function asStains(value: unknown): StainGeometry[] {
 
 export function AnalysisDetailPage() {
   const { analysisId } = useParams<{ analysisId: string }>()
+  const { role } = useMyRole()
   const [analysis, setAnalysis] = useState<AnalysisWithEvidence | null>(null)
   const [job, setJob] = useState<JobRow | null>(null)
   const [photoUrl, setPhotoUrl] = useState<string | null>(null)
@@ -170,6 +174,9 @@ export function AnalysisDetailPage() {
               {job?.attempts ? <p>Worker attempts: {job.attempts}.</p> : null}
             </CardContent>
           </Card>
+
+          <ReviewPanel analysis={analysis} role={role} onDecided={reload} />
+          <RoutePanel analysis={analysis} role={role} onRouted={reload} />
         </div>
       )}
     </div>
