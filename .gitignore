@@ -1,0 +1,20 @@
+# Dependencies and build output
+node_modules/
+dist/
+
+# Environment — .env holds the Supabase project URL + anon key, never commit it
+.env
+.env.local
+
+# Local key notes (public-by-design keys only — see the header inside the file)
+keys.md
+
+# Python sidecar
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Editor / OS noise
+.DS_Store
+*.log
