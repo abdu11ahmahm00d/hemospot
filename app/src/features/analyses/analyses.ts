@@ -100,7 +100,8 @@ export async function listAnalyses(): Promise<{
     .select("*, evidence(file_name, storage_path, item_type)")
     .order("created_at", { ascending: false })
 
-  // RLS decides which analyses come back: reviewers only ever see review/closed.
+  // RLS decides which analyses come back: reviewers see the review lifecycle
+  // (ready_for_review, approved, rejected) plus anything on review/closed cases.
   if (error) return { rows: [], error: error.message }
 
   const jobs = await latestJobsByAnalysis(data.map((row) => row.id))
