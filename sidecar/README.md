@@ -13,6 +13,19 @@ uvicorn main:app --app-dir app --port 8000
 `--app-dir app` matters: the research pipeline files (`stain_detection.py`,
 `feature_extraction.py`) import each other flat, exactly as they do in the BPA3 repo.
 
+## The queue worker (T-008, NFR1.4)
+
+```bash
+cp .env.example .env   # fill in the analyst service account, then:
+python worker.py
+```
+
+The worker signs in as an analyst and polls `analysis_jobs`: claims pending jobs,
+runs them through `/analyze` above, writes verdicts back to `analyses`. Stale claims
+(default: untouched 5 minutes) go back to pending — kill the worker mid-job and
+restart it to watch NFR1.4 happen. One line per action on stdout; that log is the
+demo proof.
+
 ## Endpoints
 
 | Method | Path | What |

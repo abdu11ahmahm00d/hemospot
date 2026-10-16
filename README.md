@@ -27,9 +27,13 @@ cp app/.env.example app/.env
 # 3. Terminal A — the React app
 cd app && npm install && npm run dev          # http://127.0.0.1:5173
 
-# 4. Terminal B — the BPA engine
+# 4. Terminal B — the BPA engine API
 cd sidecar && pip install -r requirements.txt
 uvicorn main:app --app-dir app --port 8000    # sidecar README has details
+
+# 5. Terminal C — the queue worker (T-008: polls analysis_jobs, analyses via the API)
+cd sidecar && cp .env.example .env   # fill in the analyst service account first
+python worker.py
 ```
 
 | Piece | What | Where |
