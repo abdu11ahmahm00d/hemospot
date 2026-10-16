@@ -431,6 +431,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_see_case: { Args: { check_case_id: string }; Returns: boolean }
+      case_actor_names: {
+        Args: { check_case_id: string }
+        Returns: {
+          full_name: string
+          profile_id: string
+        }[]
+      }
       case_in_review_lifecycle: {
         Args: { check_case_id: string }
         Returns: boolean
@@ -476,6 +484,7 @@ export type Database = {
           rank: number
         }[]
       }
+      search_norm: { Args: { value: string }; Returns: string }
       transition_case_status: {
         Args: { p_case_id: string; p_note?: string; p_to_status: string }
         Returns: string
