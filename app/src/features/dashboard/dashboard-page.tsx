@@ -31,7 +31,7 @@ const REQUIREMENT_ROWS: RequirementRow[] = [
   { id: "FR1.5–1.6 detect + classify", owner: "D1", state: "done" },
   { id: "FR1.7 routing + approval", owner: "D4", state: "done" },
   { id: "FR1.8 PDF report", owner: "D4", state: "scaffolded" },
-  { id: "FR1.9 role-filtered search", owner: "D2", state: "scaffolded" },
+  { id: "FR1.9 role-filtered search", owner: "D2", state: "done" },
   { id: "NFR1.1–1.2 RBAC + custody RLS", owner: "D2+D3", state: "scaffolded" },
   { id: "NFR1.3 ≤5s analysis", owner: "D1", state: "building" },
   { id: "NFR1.4–1.5 retry + hashes", owner: "D3", state: "done" },
