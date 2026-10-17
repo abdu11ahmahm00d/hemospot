@@ -1,15 +1,18 @@
 # Hemospot BPA sidecar — pinned environment.
-# Versions match the machine this was smoke-tested on (Windows 11, Python 3.11).
-opencv-python==4.13.0
+# Versions are the ones pip actually resolved on the machine this was smoke-tested on
+# (Windows 11, Python 3.11). Read them from pip show, not from each library's
+# __version__: cv2.__version__ reports 4.13.0 while the installable release is
+# 4.13.0.92, and a pin written from that string cannot be resolved by a fresh clone.
+opencv-python==4.13.0.92
 numpy==2.4.4
 pandas==2.2.3
 catboost==1.2.10
 joblib==1.5.3
-scikit-learn==1.7.3
+scikit-learn==1.8.0
 fastapi==0.141.1
 uvicorn==0.52.4
-python-multipart==0.0.22
-pillow==11.3.0
+python-multipart==0.0.32
+pillow==12.3.0
 supabase==2.33.0
 httpx==0.28.1
 python-dotenv==1.0.1
