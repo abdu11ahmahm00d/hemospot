@@ -11,6 +11,8 @@ keys.md
 
 # Python sidecar
 __pycache__/
+# The smoke test draws this synthetic pattern into the package on every run
+sidecar/app/smoke_pattern.png
 *.pyc
 .venv/
 venv/

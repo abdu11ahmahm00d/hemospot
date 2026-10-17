@@ -84,19 +84,10 @@ export function CaseDetailPage() {
     reload()
   }
 
-  if (isLoading) {
-    return <p className="text-sm text-muted-foreground">Loading case…</p>
-  }
-
-  if (loadError || !caseRow) {
-    return (
-      <p className="text-sm text-destructive" role="alert">
-        {loadError ?? "Case not found."}
-      </p>
-    )
-  }
-
-  const nextStatus = NEXT_STATUS[caseRow.status as CaseStatus] ?? null
+  // Derived before every early return on purpose: React requires the same
+  // hooks in the same order on every render, so no hook may sit below a return.
+  const nextStatus =
+    caseRow !== null ? NEXT_STATUS[caseRow.status as CaseStatus] ?? null : null
   const mayMove = role !== null && CAN_MOVE.has(role) && nextStatus !== null
   const mayAssign =
     caseRow !== null &&
@@ -108,6 +99,18 @@ export function CaseDetailPage() {
       void listAnalysts().then(setStaff)
     }
   }, [mayAssign])
+
+  if (isLoading) {
+    return <p className="text-sm text-muted-foreground">Loading case…</p>
+  }
+
+  if (loadError || !caseRow) {
+    return (
+      <p className="text-sm text-destructive" role="alert">
+        {loadError ?? "Case not found."}
+      </p>
+    )
+  }
 
   async function saveAssignment() {
     if (!caseId) return
