@@ -63,6 +63,6 @@ models/                 joblib artifact + metadata + feature importances (copied
 
 `bpa_classifier_final.joblib` is the published model: CatBoost, 618 images, 3 classes,
 CV accuracy 0.9256 / F1 macro 0.8648 (COMPAS 2026 paper). The pipeline code is copied
-byte-for-byte from `C:\Users\YourName\Documents\BPA_Research\BPA3\code\` — if it ever
+byte-for-byte from the research checkout (`Documents/BPA_Research/BPA3/code`) - if it ever
 differs, that's a bug; model training stays in the research repo, this service only
 serves.
