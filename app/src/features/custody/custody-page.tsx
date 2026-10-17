@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { useMyRole } from "@/features/auth/use-my-role"
+import { actorName, useActorNames } from "@/features/people/actor-names"
 import {
   CUSTODY_ACTIONS,
   listCustodyEvents,
@@ -98,6 +99,9 @@ export function CustodyPage() {
   }
 
   const selectedEvidence = evidenceRows.find((row) => row.id === evidenceId) ?? null
+  // Names come from the case the selected evidence belongs to, so switching items
+  // re-resolves the directory rather than reusing the previous case's people.
+  const actorNames = useActorNames(selectedEvidence?.case_id ?? null)
   // Empty while the selected item's chain is in flight, which is also what makes
   // the guard above unnecessary: there is nothing to reset.
   const events =
@@ -221,7 +225,7 @@ export function CustodyPage() {
                           </span>
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          by {event.actor.slice(0, 8)}
+                          by {actorName(actorNames, event.actor)}
                           {event.reason ? ` — ${event.reason}` : ""}
                         </p>
                         <Badge variant="outline" className="mt-1">

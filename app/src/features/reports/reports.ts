@@ -11,6 +11,9 @@
 
 import { supabase } from "@/lib/supabase"
 import type { Database } from "@/lib/database.types"
+import { actorName, shortId } from "@/features/people/actor-names"
+
+export { actorName, shortId }
 
 type CaseRow = Database["public"]["Tables"]["cases"]["Row"]
 type EvidenceRow = Database["public"]["Tables"]["evidence"]["Row"]
@@ -25,17 +28,6 @@ export type CaseReport = {
   custody: CustodyEntry[]
   analyses: AnalysisRow[]
   actorNames: Map<string, string>
-}
-
-/** Short UUID for the rare actor the directory RPC does not name. */
-export function shortId(id: string): string {
-  return id.slice(0, 8)
-}
-
-/** Display name for an actor, falling back to a short UUID. */
-export function actorName(names: Map<string, string>, id: string | null): string {
-  if (id === null) return "-"
-  return names.get(id) ?? shortId(id)
 }
 
 export async function fetchCaseReport(caseId: string): Promise<{

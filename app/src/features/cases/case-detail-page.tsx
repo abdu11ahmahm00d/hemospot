@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { useMyRole } from "@/features/auth/use-my-role"
+import { actorName, useActorNames } from "@/features/people/actor-names"
 import { useSession } from "@/features/auth/use-session"
 import {
   NEXT_STATUS,
@@ -41,6 +42,7 @@ function formatTimestamp(isoTimestamp: string): string {
 export function CaseDetailPage() {
   const { caseId } = useParams<{ caseId: string }>()
   const { role } = useMyRole()
+  const actorNames = useActorNames(caseId)
   const [caseRow, setCaseRow] = useState<CaseRow | null>(null)
   const [transitions, setTransitions] = useState<TransitionRow[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -252,7 +254,7 @@ export function CaseDetailPage() {
                       </span>
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      by {transition.acted_by.slice(0, 8)}
+                      by {actorName(actorNames, transition.acted_by)}
                       {transition.note ? ` — ${transition.note}` : ""}
                     </p>
                   </div>
