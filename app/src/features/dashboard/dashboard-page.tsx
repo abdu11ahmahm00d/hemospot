@@ -45,19 +45,22 @@ const STATE_ICON = {
 } as const
 
 function useSidecarHealth(): SidecarHealth | "down" | "checking" {
-  const [health, setHealth] = useState<SidecarHealth | "down" | "checking">("checking")
+  const sidecarUrl = import.meta.env.VITE_SIDECAR_URL as string | undefined
+  // No configured URL means down, and that is known before the first paint. Only
+  // a configured sidecar has something to wait for, so only it starts as checking.
+  const [health, setHealth] = useState<SidecarHealth | "down" | "checking">(
+    sidecarUrl ? "checking" : "down",
+  )
 
   useEffect(() => {
-    const sidecarUrl = import.meta.env.VITE_SIDECAR_URL as string | undefined
     if (!sidecarUrl) {
-      setHealth("down")
       return
     }
     fetch(`${sidecarUrl}/health`)
       .then((response) => (response.ok ? response.json() : Promise.reject()))
       .then((data: SidecarHealth) => setHealth(data))
       .catch(() => setHealth("down"))
-  }, [])
+  }, [sidecarUrl])
 
   return health
 }

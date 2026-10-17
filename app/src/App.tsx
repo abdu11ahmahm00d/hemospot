@@ -6,7 +6,7 @@
  * a banner instead of a broken page.
  */
 
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Navigate, Route, Routes, useParams } from "react-router-dom"
 
 import { AppShell } from "@/components/app-shell"
 import { useSession } from "@/features/auth/use-session"
@@ -21,6 +21,23 @@ import { AnalysisDetailPage } from "@/features/analyses/analysis-detail-page"
 import { ReportsPage } from "@/features/reports/reports-page"
 import { SearchPage } from "@/features/search/search-page"
 import { isSupabaseConfigured } from "@/lib/supabase"
+
+/**
+ * Keyed wrappers: changing the route param remounts the page, so its state is
+ * fresh by construction. Without the key the component instance survives the
+ * param change, and a note typed for one case is still sitting in the box when
+ * you arrive at the next one. Remounting also means the page never has to push a
+ * reset back down through an effect, which is the set-state-in-effect pattern.
+ */
+function KeyedCaseDetail() {
+  const { caseId } = useParams<{ caseId: string }>()
+  return <CaseDetailPage key={caseId} />
+}
+
+function KeyedAnalysisDetail() {
+  const { analysisId } = useParams<{ analysisId: string }>()
+  return <AnalysisDetailPage key={analysisId} />
+}
 
 export function App() {
   const { session, isLoading } = useSession()
@@ -58,11 +75,14 @@ export function App() {
         <Route element={<AppShell />}>
           <Route path="/" element={<DashboardPage />} />
           <Route path="/cases" element={<CasesPage />} />
-          <Route path="/cases/:caseId" element={<CaseDetailPage />} />
+          <Route path="/cases/:caseId" element={<KeyedCaseDetail />} />
           <Route path="/evidence" element={<EvidencePage />} />
           <Route path="/custody" element={<CustodyPage />} />
           <Route path="/analyses" element={<AnalysesPage />} />
-          <Route path="/analyses/:analysisId" element={<AnalysisDetailPage />} />
+          <Route
+            path="/analyses/:analysisId"
+            element={<KeyedAnalysisDetail />}
+          />
           <Route path="/reports" element={<ReportsPage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />

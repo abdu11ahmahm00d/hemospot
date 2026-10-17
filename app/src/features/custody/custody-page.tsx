@@ -30,6 +30,7 @@ import type { Database } from "@/lib/database.types"
 type CustodyEventRow = Database["public"]["Tables"]["custody_events"]["Row"]
 
 const CAN_RECORD = new Set(["admin", "lead_investigator", "analyst"])
+const EMPTY_EVENTS: CustodyEventRow[] = []
 
 function formatTimestamp(isoTimestamp: string): string {
   return new Date(isoTimestamp).toLocaleString()
@@ -39,7 +40,14 @@ export function CustodyPage() {
   const { role } = useMyRole()
   const [evidenceRows, setEvidenceRows] = useState<EvidenceWithCase[]>([])
   const [evidenceId, setEvidenceId] = useState("")
-  const [events, setEvents] = useState<CustodyEventRow[]>([])
+  // The chain is stored against the item it was loaded for, never on its own.
+  // Selecting a different item leaves `loaded` pointing at the old one, so the
+  // render below can tell "these are the previous item's events" from "these are
+  // the selected item's events" and refuse to show the former.
+  const [loaded, setLoaded] = useState<{
+    evidenceId: string
+    rows: CustodyEventRow[]
+  } | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
 
@@ -58,14 +66,18 @@ export function CustodyPage() {
   }, [])
 
   useEffect(() => {
-    if (!evidenceId) {
-      setEvents([])
-      return
-    }
+    if (!evidenceId) return
+    // A response for a selection the user has already moved away from must not
+    // land, or it would overwrite the chain they are now looking at.
+    let stale = false
     listCustodyEvents(evidenceId).then(({ events: rows, error }) => {
-      setEvents(rows)
+      if (stale) return
+      setLoaded({ evidenceId, rows })
       if (error) setLoadError(error)
     })
+    return () => {
+      stale = true
+    }
   }, [evidenceId])
 
   async function submitHandoff() {
@@ -80,12 +92,16 @@ export function CustodyPage() {
     }
     setReason("")
     listCustodyEvents(evidenceId).then(({ events: rows, error: reloadError }) => {
-      setEvents(rows)
+      setLoaded({ evidenceId, rows })
       if (reloadError) setLoadError(reloadError)
     })
   }
 
   const selectedEvidence = evidenceRows.find((row) => row.id === evidenceId) ?? null
+  // Empty while the selected item's chain is in flight, which is also what makes
+  // the guard above unnecessary: there is nothing to reset.
+  const events =
+    loaded && loaded.evidenceId === evidenceId ? loaded.rows : EMPTY_EVENTS
 
   return (
     <div className="mx-auto max-w-4xl">

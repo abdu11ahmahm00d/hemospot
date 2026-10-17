@@ -54,9 +54,13 @@ export function CaseDetailPage() {
   const [isAssigning, setIsAssigning] = useState(false)
   const [assignError, setAssignError] = useState<string | null>(null)
 
+  // The route remounts this page per case (see KeyedCaseDetail in App.tsx), so
+  // every piece of state below starts fresh on navigation and nothing has to be
+  // reset here. That is also why reload() never sets isLoading: it is true on
+  // mount until the first fetch lands, and after a mutation we would rather keep
+  // the current view on screen than blank it back to a skeleton.
   const reload = useCallback(() => {
     if (!caseId) return
-    setIsLoading(true)
     fetchCaseWithTransitions(caseId).then(({ caseRow: row, transitions: rows, error }) => {
       setCaseRow(row)
       setAssigneeId(row?.assigned_to ?? null)

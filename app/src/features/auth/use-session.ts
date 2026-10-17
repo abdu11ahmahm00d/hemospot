@@ -18,11 +18,13 @@ type SessionState = {
 
 export function useSession(): SessionState {
   const [session, setSession] = useState<Session | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  // A missing client is knowable before the first paint, so the answer lives in
+  // the initializer. Reading it here means the misconfigured case never flickers
+  // a loading state and the effect below holds no synchronous setState.
+  const [isLoading, setIsLoading] = useState(supabase !== null)
 
   useEffect(() => {
     if (!supabase) {
-      setIsLoading(false)
       return
     }
 

@@ -41,6 +41,10 @@ export function NotificationBell() {
   }, [])
 
   useEffect(() => {
+    // The only setState on this path is behind the await inside refresh(); the
+    // rule sees the call, not the microtask. Polling an external system is what
+    // an effect is for, and the alternative is a state library for five rows.
+    // oxlint-disable-next-line react/set-state-in-effect
     void refresh()
     const timer = setInterval(() => void refresh(), 30000)
     return () => clearInterval(timer)

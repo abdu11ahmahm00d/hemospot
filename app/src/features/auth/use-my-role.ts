@@ -24,12 +24,13 @@ type RoleState = {
 
 export function useMyRole(): RoleState {
   const [role, setRole] = useState<UserRole | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  // Knowable before the first paint, so it belongs in the initializer rather than
+  // being pushed in from the effect below as a synchronous setState.
+  const [isLoading, setIsLoading] = useState(supabase !== null)
 
   useEffect(() => {
     const client = supabase
     if (!client) {
-      setIsLoading(false)
       return
     }
 

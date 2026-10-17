@@ -67,9 +67,12 @@ export function AnalysisDetailPage() {
   const [loadError, setLoadError] = useState<string | null>(null)
   const [showOverlay, setShowOverlay] = useState(true)
 
+  // Remounted per analysis (see KeyedAnalysisDetail in App.tsx), so no state
+  // needs resetting when the route param changes. reload() therefore never sets
+  // isLoading: it is true only until the first fetch lands, and after a review
+  // decision we keep the current view rather than blanking to a skeleton.
   const reload = useCallback(() => {
     if (!analysisId) return
-    setIsLoading(true)
     fetchAnalysisDetail(analysisId).then(({ analysis: row, job: jobRow, photoUrl: url, error }) => {
       setAnalysis(row)
       setJob(jobRow)
