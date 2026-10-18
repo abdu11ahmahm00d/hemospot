@@ -10,8 +10,13 @@ npm run dev            # http://127.0.0.1:5173
 ```
 
 - `npm run build` — typecheck + production build (what gets submitted).
-- `../supabase/migrations/0001_init.sql` is the schema; paste it into the Supabase SQL
-  editor before signing in, or the screens will load but every query will be denied.
+- `npm run lint` — what CI gates on (`oxlint --deny-warnings`, so a warning fails the
+  job). Run it before opening a pull request.
+- `../supabase/migrations/` is the schema, in timestamp order. Apply the files oldest
+  first in the Supabase SQL editor (or `npx supabase db push` from `../supabase/`), then
+  sign in. The signup trigger creates every new account with role `viewer`, which every
+  policy denies, so promote the first one from the SQL editor:
+  `update public.profiles set role = 'admin' where id = (select id from auth.users where email = 'you@example.com');`
 
 ## Layout
 
