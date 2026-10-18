@@ -1,0 +1,4 @@
+# Store and check out every text file with LF, so a file can never look
+# modified merely because git expected CRLF in the working tree
+# (core.autocrlf=true does that today). text=auto leaves binaries alone.
+* text=auto eol=lf
