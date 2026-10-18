@@ -1,5 +1,5 @@
 """
-feature_extraction.py — Extract ~35 morphological and spatial features from bloodstain images.
+feature_extraction.py — Extract 30 morphological and spatial features from bloodstain images.
 
 Feature Groups:
   Group 1: Stain Morphology (per stain, aggregated as mean/std/max)
@@ -115,7 +115,7 @@ def extract_features(
     """
     Extract all features from detected stains for one image.
     
-    Returns dict with ~35 features.
+    Returns dict with 30 features.
     """
     features = {
         # Identifiers
