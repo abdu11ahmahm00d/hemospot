@@ -35,4 +35,5 @@ src/
 ```
 
 Every page opens with a comment naming its module, its owner, and the FR/NFR it serves —
-that's `CODE_STANDARDS.md` rule one and it's how the viva reviewer reads the code.
+that's the module-comment rule in `../CODE_STANDARDS.md` — it's how the viva reviewer
+reads the code.
