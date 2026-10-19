@@ -1,0 +1,116 @@
+{
+    "generated":  "2026-10-20",
+    "source":  "Wikimedia Commons (curated for platform testing; no ground-truth class claimed)",
+    "items":  [
+                  {
+                      "file":  "sidewalk-spatter.jpg",
+                      "bytes":  610464,
+                      "sha256":  "0069f36f7a7a58400e1013a240572009f0505206990dc29359987c759cca4ee7",
+                      "commons":  "File:Blood on the sidewalk.jpg",
+                      "page":  "https://commons.wikimedia.org/wiki/File:Blood_on_the_sidewalk.jpg",
+                      "license":  "CC BY-SA 3.0",
+                      "author":  "Bubba73",
+                      "note":  "1600px thumbnail of the 6000x4000 original"
+                  },
+                  {
+                      "file":  "bedsheet-stains.jpg",
+                      "bytes":  826994,
+                      "sha256":  "5de1fc4b03e5a0f914d108f515634aeaef62a436c40858b23114ea7bdabcef4b",
+                      "commons":  "File:Blood stains on bed sheets.jpg",
+                      "page":  "https://commons.wikimedia.org/wiki/File:Blood_stains_on_bed_sheets.jpg",
+                      "license":  "CC BY-SA 4.0",
+                      "author":  "Panamitsu",
+                      "note":  "1600px thumbnail"
+                  },
+                  {
+                      "file":  "undershirt-stains.jpg",
+                      "bytes":  1009236,
+                      "sha256":  "938ad80406a6f56d38efb32575b62c3ce4fc1982ee76a7226becfd2136816367",
+                      "commons":  "File:Bloodstains on an undershirt.jpg",
+                      "page":  "https://commons.wikimedia.org/wiki/File:Bloodstains_on_an_undershirt.jpg",
+                      "license":  "CC BY-SA 4.0",
+                      "author":  "Ser Amantio di Nicolao",
+                      "note":  "1600px thumbnail"
+                  },
+                  {
+                      "file":  "drop-pattern.jpg",
+                      "bytes":  139098,
+                      "sha256":  "cbb076799de4c5cfad12bb00cf636e948e8b32a4724eca23fb41b5a20aaea2b5",
+                      "commons":  "File:Blood.jpg",
+                      "page":  "https://commons.wikimedia.org/wiki/File:Blood.jpg",
+                      "license":  "CC BY 1.0",
+                      "author":  "Nyki m",
+                      "note":  "1600px thumbnail"
+                  },
+                  {
+                      "file":  "gauze-blood.jpg",
+                      "bytes":  287282,
+                      "sha256":  "2fa0f806a28fdd215dfa15e1ca0d3a8a3cde65d41133d55f5661dff66738e1cb",
+                      "commons":  "File:Blood (4141132984).jpg",
+                      "page":  "https://commons.wikimedia.org/wiki/File:Blood_(4141132984).jpg",
+                      "license":  "CC BY-SA 2.0",
+                      "author":  "Lee Haywood",
+                      "note":  "1600px thumbnail"
+                  },
+                  {
+                      "file":  "civet-trail.jpg",
+                      "bytes":  914949,
+                      "sha256":  "17b081c3c1c8433957557a084274339cd57906eb1374c6d89b42302f788dda6c",
+                      "commons":  "File:Blood stain of the civet.jpg",
+                      "page":  "https://commons.wikimedia.org/wiki/File:Blood_stain_of_the_civet.jpg",
+                      "license":  "CC BY-SA 3.0",
+                      "author":  "Verity67",
+                      "note":  "1600px thumbnail"
+                  },
+                  {
+                      "file":  "asphalt-drops-1.jpg",
+                      "bytes":  536534,
+                      "sha256":  "16173914aa60498fca0befcdfbda75f4584bb41c5b731d275ed82ab6e453b43b",
+                      "commons":  "File:Asfalt uzerindeki kan damlalari-1.jpg",
+                      "page":  "https://commons.wikimedia.org/wiki/File:Asfalt_uzerindeki_kan_damlalari-1.jpg",
+                      "license":  "CC BY-SA 4.0",
+                      "author":  "Modern primat",
+                      "note":  "Turkish: blood drops on asphalt; 1600px thumbnail"
+                  },
+                  {
+                      "file":  "asphalt-drops-2.jpg",
+                      "bytes":  847663,
+                      "sha256":  "b407069d0a885f2973fe2827097321f3d7c829506464ee1e11741ec3b65f85bb",
+                      "commons":  "File:Asfalt uzerindeki kan damlalari-2.jpg",
+                      "page":  "https://commons.wikimedia.org/wiki/File:Asfalt_uzerindeki_kan_damlalari-2.jpg",
+                      "license":  "CC BY-SA 4.0",
+                      "author":  "Modern primat",
+                      "note":  "Turkish: blood drops on asphalt; 1600px thumbnail"
+                  },
+                  {
+                      "file":  "snow-stain.jpg",
+                      "bytes":  17154,
+                      "sha256":  "772927c598157cdaf208d5b984ef4d66d020fbfac5b9e87e8cf9f9f8b7ca844b",
+                      "commons":  "File:Blood stain on the snow - geograph.org.uk - 5697811.jpg",
+                      "page":  "https://commons.wikimedia.org/wiki/File:Blood_stain_on_the_snow_-_geograph.org.uk_-_5697811.jpg",
+                      "license":  "CC BY-SA 2.0",
+                      "author":  "Jeremy Bolwell",
+                      "note":  "original file (640x480, smaller than the 1600px thumbnail)"
+                  },
+                  {
+                      "file":  "snow-animal-scene.jpg",
+                      "bytes":  590545,
+                      "sha256":  "10b1fa9ffc2cb8cf492d5d75505599e80e0ce7ef3878a79a9cca362207e47808",
+                      "commons":  "File:Nature lends such evil dreams.jpg",
+                      "page":  "https://commons.wikimedia.org/wiki/File:Nature_lends_such_evil_dreams.jpg",
+                      "license":  "CC BY 2.0",
+                      "author":  "V. H. Hammer",
+                      "note":  "animal predation scene; 1600px thumbnail"
+                  },
+                  {
+                      "file":  "small-spatter.png",
+                      "bytes":  12310,
+                      "sha256":  "874cc03fe75281f9f639c8b46d092a0d4c291fcf992527d798e8054903852eb0",
+                      "commons":  "File:Blood stain.png",
+                      "page":  "https://commons.wikimedia.org/wiki/File:Blood_stain.png",
+                      "license":  "CC BY-SA 3.0",
+                      "author":  "Panapp",
+                      "note":  "original file (231x287, smaller than the 1600px thumbnail)"
+                  }
+              ]
+}

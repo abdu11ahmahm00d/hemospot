@@ -68,8 +68,29 @@ def claim_next_job(db):
     """
     Take the oldest pending job that still has attempts left. Marking it
     `processing` with a fresh timestamp IS the claim — one row, one writer wins.
-    Returns the job row, or None when the queue is empty.
+
+    The candidate is SELECTed first and then UPDATEd by id. A single
+    `UPDATE ... LIMIT 1` does NOT work here: PostgREST applies LIMIT to the
+    rows it RETURNS, not to the rows it UPDATES, so one statement marks EVERY
+    pending job as `processing` and strands them all until the stale sweep
+    frees them (measured: 10 jobs claimed at once, 9 left hanging). Selecting
+    first and updating by id under a status guard keeps the claim to exactly
+    one job: if another worker won the race, the guarded update matches zero
+    rows and this worker simply waits for the next poll.
     """
+    candidate = (
+        db.table("analysis_jobs")
+        .select("id")
+        .eq("status", "pending")
+        .lt("attempts", MAX_ATTEMPTS)
+        .order("created_at")
+        .limit(1)
+        .execute()
+    )
+    rows = candidate.data or []
+    if not rows:
+        return None
+
     claimed = (
         db.table("analysis_jobs")
         .update(
@@ -78,10 +99,8 @@ def claim_next_job(db):
                 "picked_up_at": datetime.now(timezone.utc).isoformat(),
             }
         )
+        .eq("id", rows[0]["id"])
         .eq("status", "pending")
-        .lt("attempts", MAX_ATTEMPTS)
-        .order("created_at")
-        .limit(1)
         .execute()
     )
     rows = claimed.data or []
@@ -130,12 +149,23 @@ def run_job(db, job: dict) -> None:
         ).eq("id", job_id).execute()
         log(f"job {job_id[:8]} done: {result['verdict']} ({result['confidence']:.2f})")
     except Exception as error:
+        message = str(error)
+        # A missing object is PERMANENT: no retry will ever find the bytes, so
+        # parking it after MAX_ATTEMPTS poll cycles only wastes time. (Seen for
+        # real: a verification fixture job pointed at a storage key that never
+        # existed, and the worker burned five attempts on a 404.)
+        permanent = (
+            "not_found" in message
+            or "NoSuchKey" in message
+            or ("404" in message and "Object" in message)
+        )
         attempts = job["attempts"] + 1
-        resting = "failed" if attempts >= MAX_ATTEMPTS else "pending"
+        resting = "failed" if permanent or attempts >= MAX_ATTEMPTS else "pending"
         db.table("analysis_jobs").update(
-            {"status": resting, "attempts": attempts, "last_error": str(error)[:500]}
+            {"status": resting, "attempts": attempts, "last_error": message[:500]}
         ).eq("id", job_id).execute()
-        log(f"job {job_id[:8]} {resting} (attempt {attempts}): {str(error)[:120]}")
+        tag = " [permanent]" if permanent else ""
+        log(f"job {job_id[:8]} {resting} (attempt {attempts}){tag}: {message[:120]}")
 
 
 def main() -> None:

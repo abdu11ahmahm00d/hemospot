@@ -165,6 +165,26 @@ foreach ($a in $afterQueue) {
   }
 }
 
+# ------------------------------------------------------------- cleanup -----
+# Probe 69 enqueues a REAL job row and probe 70 claims it, so the matrix leaves
+# claimable rows behind: a live worker would claim them, fail on the fixture's
+# non-existent storage object and burn retries on work that cannot succeed.
+# Remove the runtime rows and put the fixed-uuid fixtures back to `done` so the
+# queue stays clean for the next run (and for any worker running in parallel).
+$cleanup = @"
+delete from public.analysis_jobs
+where id not in ('00000000-0000-4000-8000-000000000024','00000000-0000-4000-8000-000000000025')
+  and analysis_id in (
+    select a.id from public.analyses a
+    join public.evidence e on e.id = a.evidence_id
+    join public.cases c on c.id = e.case_id
+    where c.case_number like 'VERIFY-%');
+update public.analysis_jobs set status = 'done', picked_up_at = null
+where id in ('00000000-0000-4000-8000-000000000024','00000000-0000-4000-8000-000000000025');
+"@
+$clean = Invoke-ManagementSql -Env $H -Sql $cleanup
+if ($clean.status -ge 400) { Write-Warning "matrix cleanup failed: HTTP $($clean.status) $($clean.body)" }
+
 # --------------------------------------------------------------- report -----
 $failed = @($results | Where-Object { -not $_.pass })
 $byNfr = $results | Group-Object nfr | Sort-Object Name
