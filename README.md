@@ -96,7 +96,7 @@ The workspace is at `app/`, the engine at `sidecar/`, and the schema with its po
 
 Fork the repository, clone your fork, and create a branch named after your task (`git checkout -b t-006-evidence-registry`). Push the branch to your fork and open a pull request against `main`. Only maintainers merge.
 
-Every pull request passes typecheck and build, carries no secrets, keeps authorization in row level security rather than in application code, and opens each changed file with a comment naming what that file does and which requirement it serves. Fix review findings on the same branch so the pull request updates itself.
+Every pull request passes typecheck, build and tests, carries no secrets, keeps authorization in row level security rather than in application code, and opens each changed file with a comment naming what that file does and which requirement it serves. Fix review findings on the same branch so the pull request updates itself.
 
 ## Issues, Bugs, and Feature Requests
 

@@ -12,6 +12,9 @@ npm run dev            # http://127.0.0.1:5173
 - `npm run build` — typecheck + production build (what gets submitted).
 - `npm run lint` — what CI gates on (`oxlint --deny-warnings`, so a warning fails the
   job). Run it before opening a pull request.
+- `npm test` — vitest, offline: two behavioural regression tests (chain isolation on the
+  custody view, session loading with no configured client). Supabase is mocked in both,
+  so no `.env` and no network are needed.
 - `../supabase/migrations/` is the schema, in timestamp order. Apply the files oldest
   first in the Supabase SQL editor (or `npx supabase db push` from `../supabase/`), then
   `../supabase/seed.sql` for one demo account per persona, then sign in. Without the seed,
