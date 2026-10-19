@@ -5,9 +5,9 @@ project `pkebstfwndhftxajztcx` - personas: arman (admin), nahin (lead), firman (
 | metric | probes | passed | failed |
 |---|---|---|---|
 | NFR 1.1 | 78 | 78 | 0 |
-| NFR 1.2 | 11 | 11 | 0 |
+| NFR 1.2 | 13 | 13 | 0 |
 | NFR 1.5 | 5 | 5 | 0 |
-| **total** | 94 | 94 | 0 |
+| **total** | 96 | 96 | 0 |
 
 | # | NFR | role | expected | got | result | probe |
 |---|---|---|---|---|---|---|
@@ -105,3 +105,5 @@ project `pkebstfwndhftxajztcx` - personas: arman (admin), nahin (lead), firman (
 | 92 | 1.5 | admin | deny | HTTP 200 [] ; after-list: object 'verify-pattern.png' present = True | PASS | evidence bytes cannot be deleted (admin) |
 | 93 | 1.1 | viewer | allow | HTTP 200 | PASS | staff reads evidence bytes (table RLS is the gate, by design) |
 | 94 | 1.1 | viewer | allow | HTTP 200 | PASS | staff lists the bucket (by design) |
+| 95 | 1.2 | analyst | allow | HTTP 200 | PASS | analyst reads custody of a case they are NOT assigned to (staff reach) |
+| 96 | 1.2 | analyst | allow | HTTP 201 | PASS | analyst records custody on an unassigned case and gets the row back (the app's insert path) |

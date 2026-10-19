@@ -7,7 +7,8 @@
     "EV_O": "00000000-0000-4000-8000-000000000004",
     "EV_R": "00000000-0000-4000-8000-000000000005",
     "EV_C": "00000000-0000-4000-8000-000000000006",
-    "CE_O1": "00000000-0000-4000-8000-000000000011",
+      "CE_O1": "00000000-0000-4000-8000-000000000011",
+      "CE_C": "00000000-0000-4000-8000-000000000013",
     "TR_0": "00000000-0000-4000-8000-000000000040",
     "TR_1": "00000000-0000-4000-8000-000000000041",
     "A_R": "00000000-0000-4000-8000-000000000021",
@@ -124,6 +125,9 @@
     { "n": 91, "nfr": "1.5", "role": "analyst",  "method": "PUT", "path": "storage/v1/object/evidence/$FIRMAN_ID/$PATTERN_NAME", "expect": "deny",  "storage": true, "content_type": "image/png", "headers": { "x-upsert": "true" }, "label": "evidence bytes cannot be overwritten", "body_raw_file": "smoke_pattern.png" },
     { "n": 92, "nfr": "1.5", "role": "admin",    "method": "DELETE", "path": "storage/v1/object/evidence", "expect": "deny",  "storage": true, "label": "evidence bytes cannot be deleted (admin)", "body": { "prefixes": ["$FIRMAN_ID/$PATTERN_NAME"] }, "after": { "storage_list_as": "analyst", "want_name": "$PATTERN_NAME" } },
     { "n": 93, "nfr": "1.1", "role": "viewer",   "method": "GET", "path": "storage/v1/object/evidence/$FIRMAN_ID/$PATTERN_NAME", "expect": "allow", "storage": true, "by_design_note": "storage serves bytes to any staff member by design; which FILES exist is governed by the evidence-table RLS (see migration 20261016123202)", "label": "staff reads evidence bytes (table RLS is the gate, by design)" },
-    { "n": 94, "nfr": "1.1", "role": "viewer",   "method": "POST", "path": "storage/v1/object/list/evidence", "expect": "allow", "storage": true, "by_design_note": "same design note as n93", "body": { "prefix": "", "limit": 100 }, "label": "staff lists the bucket (by design)" }
-  ]
+      { "n": 94, "nfr": "1.1", "role": "viewer",   "method": "POST", "path": "storage/v1/object/list/evidence", "expect": "allow", "storage": true, "by_design_note": "same design note as n93", "body": { "prefix": "", "limit": 100 }, "label": "staff lists the bucket (by design)" },
+
+      { "n": 95, "nfr": "1.2", "role": "analyst",  "method": "GET", "path": "rest/v1/custody_events?select=id&id=eq.$CE_C", "expect": "allow", "label": "analyst reads custody of a case they are NOT assigned to (staff reach)" },
+      { "n": 96, "nfr": "1.2", "role": "analyst",  "method": "POST", "path": "rest/v1/custody_events", "expect": "allow", "label": "analyst records custody on an unassigned case and gets the row back (the app's insert path)", "body": { "evidence_id": "$EV_R", "actor": "$FIRMAN_ID", "action": "collected", "reason": "probe 96" } }
+    ]
 }

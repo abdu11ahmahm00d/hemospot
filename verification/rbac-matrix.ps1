@@ -181,6 +181,12 @@ where id not in ('00000000-0000-4000-8000-000000000024','00000000-0000-4000-8000
     where c.case_number like 'VERIFY-%');
 update public.analysis_jobs set status = 'done', picked_up_at = null
 where id in ('00000000-0000-4000-8000-000000000024','00000000-0000-4000-8000-000000000025');
+delete from public.analysis_jobs where analysis_id in (
+  select a.id from public.analyses a join public.evidence e on e.id = a.evidence_id
+  where e.file_name = 'verify-probe.png');
+delete from public.analyses where evidence_id in (
+  select id from public.evidence where file_name = 'verify-probe.png');
+delete from public.evidence where file_name = 'verify-probe.png';
 "@
 $clean = Invoke-ManagementSql -Env $H -Sql $cleanup
 if ($clean.status -ge 400) { Write-Warning "matrix cleanup failed: HTTP $($clean.status) $($clean.body)" }
