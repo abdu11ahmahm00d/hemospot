@@ -69,6 +69,9 @@ supabase link --project-ref <your-project-ref>     # prompts for the database pa
 # Apply the schema: tables, functions, triggers, and row level security policies
 supabase db push
 
+# Optional: one demo account per persona (set seed_password in supabase/seed.sql first)
+supabase db query --linked -f supabase/seed.sql
+
 # Regenerate the typed client whenever the schema changes
 supabase gen types typescript --linked > app/src/lib/database.types.ts
 

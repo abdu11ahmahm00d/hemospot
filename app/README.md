@@ -14,8 +14,9 @@ npm run dev            # http://127.0.0.1:5173
   job). Run it before opening a pull request.
 - `../supabase/migrations/` is the schema, in timestamp order. Apply the files oldest
   first in the Supabase SQL editor (or `npx supabase db push` from `../supabase/`), then
-  sign in. The signup trigger creates every new account with role `viewer`, which every
-  policy denies, so promote the first one from the SQL editor:
+  `../supabase/seed.sql` for one demo account per persona, then sign in. Without the seed,
+  the signup trigger creates every new account with role `viewer`, which every policy
+  denies, so promote the first one from the SQL editor:
   `update public.profiles set role = 'admin' where id = (select id from auth.users where email = 'you@example.com');`
 
 ## Layout
