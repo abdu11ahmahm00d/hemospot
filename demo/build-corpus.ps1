@@ -55,6 +55,11 @@ if ($r.status -eq 200 -and $r.body -and $r.body -ne "[]") {
   Write-Host "case created: DEMO-CORPUS $caseId"
 }
 
+# The analyst works this case: without an assignment the analyst cannot even
+# see the case in their own queue (cases policy: assigned_to = auth.uid()).
+$assign = Invoke-Http -Method PATCH -Url ("$url/rest/v1/cases?id=eq.$caseId") -Headers $leadH -Body (@{ assigned_to = $analyst.id } | ConvertTo-Json -Compress)
+if ($assign.status -ge 400) { throw ("case assignment failed: HTTP " + $assign.status + " " + $assign.body) }
+
 # ---- evidence + analyses per image ----------------------------------------
 $n = 0
 foreach ($it in $manifest.items) {
@@ -90,6 +95,27 @@ foreach ($it in $manifest.items) {
     $createdRow = $r.body | ConvertFrom-Json
     $evidenceId = $createdRow[0].id
     Write-Host ("  [{0,2}/11] added    {1}" -f $n, $it.file)
+  }
+
+  # ---- custody chain ------------------------------------------------------
+  # Each corpus item carries a real chain (collected -> sealed -> transferred)
+  # so the custody screen has something honest to show: the rows are written
+  # through the same INSERT-only path the UI uses, actor = the signed-in
+  # analyst, and the chain cannot be edited afterwards.
+  $qChain = Invoke-Http -Method GET -Url ("$url/rest/v1/custody_events?evidence_id=eq.$evidenceId&select=id") -Headers $leadH
+  $haveChain = @()
+  if ($qChain.status -eq 200 -and $qChain.body) { $parsedChain = $qChain.body | ConvertFrom-Json; if ($null -ne $parsedChain) { $haveChain = @($parsedChain) } }
+  if ($haveChain.Count -eq 0) {
+    $steps = @(
+      @{ action = "collected"; reason = "Registered from the public-photo corpus batch" },
+      @{ action = "sealed"; reason = "Sealed for laboratory analysis" },
+      @{ action = "transferred"; reason = "Handed to the analysis queue for classification" }
+    )
+    foreach ($step in $steps) {
+      $chainBody = (@{ evidence_id = $evidenceId; actor = $analyst.id; action = $step.action; reason = $step.reason } | ConvertTo-Json -Compress)
+      $r = Invoke-Http -Method POST -Url "$url/rest/v1/custody_events" -Headers $analystH -Body $chainBody
+      if ($r.status -ne 201) { throw ("custody event insert failed for " + $it.file + ": HTTP " + $r.status + " " + $r.body) }
+    }
   }
 
   $q = Invoke-Http -Method GET -Url ("$url/rest/v1/analyses?evidence_id=eq.$evidenceId&select=id") -Headers $leadH

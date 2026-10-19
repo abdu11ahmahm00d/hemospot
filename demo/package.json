@@ -1,0 +1,12 @@
+{
+  "name": "hemospot-demo",
+  "private": true,
+  "type": "module",
+  "description": "Demo tooling for Hemospot: scripted screen capture of the end-to-end walkthrough.",
+  "scripts": {
+    "capture": "node capture-demo.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.1"
+  }
+}

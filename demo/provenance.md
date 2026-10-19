@@ -1,6 +1,6 @@
 # Demo corpus provenance (T-015)
 
-Generated: 2026-10-20 02:46 - project pkebstfwndhftxajztcx
+Generated: 2026-10-20 03:46 - project pkebstfwndhftxajztcx
 
 Every image below is loaded in the live database as evidence in case `DEMO-CORPUS`
 and its cached result is a genuine output of the deployed pipeline (worker + sidecar,

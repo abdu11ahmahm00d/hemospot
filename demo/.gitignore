@@ -1,2 +1,6 @@
 # Worker and sidecar logs from the corpus builder (local runs only)
 logs/
+
+# The raw Playwright capture - the MP4 next to it is the deliverable
+video/*.webm
+video/logs/

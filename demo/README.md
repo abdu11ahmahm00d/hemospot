@@ -39,6 +39,30 @@ its SHA-256 against the manifest - a refused download once stored a Wikimedia
 error page under an image's name, and that class of bug is invisible unless the
 bytes are checked.
 
+## The demo walkthrough (video)
+
+`video/demo-walkthrough.mp4` is the recorded end-to-end pass: sign in, cases,
+case detail, the analysis result card with the detected stains outlined,
+evidence register, chain of custody, search and the report. It is generated,
+not hand-shot, so it can be re-recorded against a fresh database at any time:
+
+```powershell
+powershell -File demo\record-demo.ps1     # starts the app, records, converts to MP4
+```
+
+`record-demo.ps1` starts the dev server, runs `capture-demo.mjs` (Playwright,
+in `demo/`), stops the server and converts the capture with ffmpeg. The script
+resolves the case, evidence and analysis ids through the REST API first, so it
+follows a rebuilt corpus instead of hard-coded ids. `capture-demo.mjs` needs
+Playwright's Chromium:
+
+```powershell
+cd demo; npm install; npx playwright install chromium
+```
+
+The persona password is read from `sidecar/.env` - no secret lives in the
+repository.
+
 ## Licensing
 
 Every image is a Wikimedia Commons file used under its own license (CC BY or CC
