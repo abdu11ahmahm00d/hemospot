@@ -218,8 +218,9 @@ resolves actor names for the trail.
 The sidecar is a local process; the model is loaded once at start-up and the
 measurement below is the full HTTP round-trip including inference.
 
-*Measured:* **260 ms / 52 ms / 55 ms** for three consecutive `POST /analyze`
-calls, and **9.7 ms – 511.2 ms** across the 11-image demo corpus (median
+*Measured:* **597 ms / 57 ms / 57 ms** for three consecutive `POST /analyze`
+calls on the committed run (the first sample carries the model warm-up), and
+**9.7 ms – 511.2 ms** across the 11-image demo corpus (median
 ≈ 85 ms) — roughly 10–50× inside the 5 s budget. The corpus's slowest image
 (511 ms) is a wide street scene with many candidate pixels; the fastest
 (9.7 ms) is a small close-up.
@@ -288,7 +289,7 @@ rather than being force-fitted to a class.
 | FR1.9 | D2 Cases & RBAC | RPCs `search_cases` / `search_evidence` (SECURITY INVOKER) | probes 97–100 |
 | NFR1.1 | D2 (policies) | RLS across 8 tables · 5 roles | 100/100 probes |
 | NFR1.2 | D3 | `custody_events` — append-only by construction | probes 35–45, 95–96 |
-| NFR1.3 | D1 | sidecar (model loaded once) | 260/52/55 ms |
+| NFR1.3 | D1 | sidecar (model loaded once) | 597/57/57 ms |
 | NFR1.4 | D1 | `worker.py` + `analysis_jobs` | kill-test drill |
 | NFR1.5 | D3 | `sha256Hex` · `verify_evidence_hash` RPC | probes 46–47, 90–92 + 3 hash drills |
 | NFR1.6 | D1 | `CONFIDENCE_THRESHOLD = 0.60` · `inconclusive_result` | 2 invariant drills · corpus 5/11 inconclusive |
