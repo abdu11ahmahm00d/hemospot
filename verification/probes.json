@@ -1,5 +1,5 @@
 {
-  "note": "T-016 RBAC probe matrix. Each probe is one HTTP attempt made AS a persona against the live Supabase project. 'allow' means the rows/mutation must come through; 'deny' means Postgres RLS must refuse it (403 for writes, an empty set for reads/updates). $TOKENS are replaced by rbac-matrix.ps1.",
+  "note": "T-016 RBAC probe matrix. Each probe is one HTTP attempt made AS a persona against the live Supabase project. 'allow' means the rows/mutation must come through; 'deny' means Postgres RLS must refuse it (403 for writes, an empty set for reads/updates); 'filtered' means the call is allowed but the caller's own RLS filtered every candidate row away (a 2xx with an empty array) - the shape a role-filtered read takes. $TOKENS are replaced by rbac-matrix.ps1.",
   "shorthands": {
     "CASE_O": "00000000-0000-4000-8000-000000000001",
     "CASE_R": "00000000-0000-4000-8000-000000000002",
@@ -128,6 +128,10 @@
       { "n": 94, "nfr": "1.1", "role": "viewer",   "method": "POST", "path": "storage/v1/object/list/evidence", "expect": "allow", "storage": true, "by_design_note": "same design note as n93", "body": { "prefix": "", "limit": 100 }, "label": "staff lists the bucket (by design)" },
 
       { "n": 95, "nfr": "1.2", "role": "analyst",  "method": "GET", "path": "rest/v1/custody_events?select=id&id=eq.$CE_C", "expect": "allow", "label": "analyst reads custody of a case they are NOT assigned to (staff reach)" },
-      { "n": 96, "nfr": "1.2", "role": "analyst",  "method": "POST", "path": "rest/v1/custody_events", "expect": "allow", "label": "analyst records custody on an unassigned case and gets the row back (the app's insert path)", "body": { "evidence_id": "$EV_R", "actor": "$FIRMAN_ID", "action": "collected", "reason": "probe 96" } }
+      { "n": 96, "nfr": "1.2", "role": "analyst",  "method": "POST", "path": "rest/v1/custody_events", "expect": "allow", "label": "analyst records custody on an unassigned case and gets the row back (the app's insert path)", "body": { "evidence_id": "$EV_R", "actor": "$FIRMAN_ID", "action": "collected", "reason": "probe 96" } },
+    { "n": 97, "nfr": "1.1", "role": "analyst", "method": "POST", "path": "rest/v1/rpc/search_cases", "expect": "allow", "label": "analyst search finds the case assigned to them", "body": { "query_text": "verify open" } },
+    { "n": 98, "nfr": "1.1", "role": "analyst", "method": "POST", "path": "rest/v1/rpc/search_cases", "expect": "filtered", "label": "analyst search hides a case they are not assigned to (RLS filters the candidate rows)", "body": { "query_text": "verify review" } },
+    { "n": 99, "nfr": "1.1", "role": "viewer", "method": "POST", "path": "rest/v1/rpc/search_cases", "expect": "allow", "label": "viewer search finds a closed case", "body": { "query_text": "verify closed" } },
+    { "n": 100, "nfr": "1.1", "role": "viewer", "method": "POST", "path": "rest/v1/rpc/search_cases", "expect": "filtered", "label": "viewer search hides an open case (RLS filters the candidate rows)", "body": { "query_text": "verify open" } }
     ]
 }

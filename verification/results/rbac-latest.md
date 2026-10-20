@@ -4,10 +4,10 @@ project `pkebstfwndhftxajztcx` - personas: arman (admin), nahin (lead), firman (
 
 | metric | probes | passed | failed |
 |---|---|---|---|
-| NFR 1.1 | 78 | 78 | 0 |
+| NFR 1.1 | 82 | 82 | 0 |
 | NFR 1.2 | 13 | 13 | 0 |
 | NFR 1.5 | 5 | 5 | 0 |
-| **total** | 96 | 96 | 0 |
+| **total** | 100 | 100 | 0 |
 
 | # | NFR | role | expected | got | result | probe |
 |---|---|---|---|---|---|---|
@@ -107,3 +107,7 @@ project `pkebstfwndhftxajztcx` - personas: arman (admin), nahin (lead), firman (
 | 94 | 1.1 | viewer | allow | HTTP 200 | PASS | staff lists the bucket (by design) |
 | 95 | 1.2 | analyst | allow | HTTP 200 | PASS | analyst reads custody of a case they are NOT assigned to (staff reach) |
 | 96 | 1.2 | analyst | allow | HTTP 201 | PASS | analyst records custody on an unassigned case and gets the row back (the app's insert path) |
+| 97 | 1.1 | analyst | allow | HTTP 200 | PASS | analyst search finds the case assigned to them |
+| 98 | 1.1 | analyst | filtered | HTTP 200 [] | PASS | analyst search hides a case they are not assigned to (RLS filters the candidate rows) |
+| 99 | 1.1 | viewer | allow | HTTP 200 | PASS | viewer search finds a closed case |
+| 100 | 1.1 | viewer | filtered | HTTP 200 [] | PASS | viewer search hides an open case (RLS filters the candidate rows) |

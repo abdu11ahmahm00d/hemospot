@@ -117,6 +117,12 @@ foreach ($p in $probesDoc.probes) {
     } else {
       $pass = ($resp.status -ge 400)
     }
+  } elseif ($p.expect -eq 'filtered') {
+    # The call itself is allowed, but the caller's own RLS filtered every
+    # candidate row away: a 2xx with an empty array. This is the shape a
+    # role-filtered read takes - the RPC cannot widen what the caller may see,
+    # so a row they may not read simply never appears.
+    $pass = ($resp.status -ge 200 -and $resp.status -lt 300) -and $isEmptyArray
   } else {
     if ($p.method -eq 'GET' -and -not $p.storage) { $pass = ($resp.status -lt 300) -and (-not $isEmptyArray) }
     elseif ($p.method -eq 'POST' -and $p.body -and -not $p.storage -and -not $p.body_raw_file) {
