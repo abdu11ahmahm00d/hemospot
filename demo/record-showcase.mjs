@@ -229,10 +229,13 @@ async function clickElement(locator, ms = 650) {
   await clickAt(x, y, ms);
 }
 
-async function typeText(text, { min = 95, max = 185, spacePause = 130 } = {}) {
+async function typeText(text, { min = 95, max = 185, spacePause = 130, secret = false } = {}) {
   for (const char of text) {
     await page.keyboard.type(char);
-    logEvent("key", { char });
+    // A secret field logs the timing only: the sound track needs when the key
+    // went down, not what it was. The character never reaches the disk.
+    if (secret) logEvent("key");
+    else logEvent("key", { char });
     let wait = min + Math.random() * (max - min);
     if (char === " ") wait += spacePause;
     await delay(wait);
@@ -275,7 +278,7 @@ await step("click the password field", async () => {
 
 await step("type the password", async () => {
   // a password is typed deliberately: slower, and the field is masked
-  await typeText(PASSWORD, { min: 135, max: 215, spacePause: 120 });
+  await typeText(PASSWORD, { min: 135, max: 215, spacePause: 120, secret: true });
 });
 
 await step("press Sign in", async () => {
