@@ -5,11 +5,7 @@
   ·
   <a href="#architecture">Architecture</a>
   ·
-  <a href="#documentation">Documentation</a>
-  ·
   <a href="#installation">Installation</a>
-  ·
-  <a href="#contributing">Contributing</a>
   ·
   <a href="#issues-bugs-and-feature-requests">Issues</a>
 </p>
@@ -60,18 +56,6 @@ Hemospot is a forensic case workspace that keeps the photograph, the custody han
 
 **The queue worker holds no service key.** It signs in as an ordinary analyst account and obeys the same policies as every human analyst, so a bug in the worker cannot grant it more access than a person has.
 
-## Documentation
-
-| Document | What it holds |
-|----------|---------------|
-| [`docs/SRS.md`](docs/SRS.md) | The specification: every FR and NFR from the assessment contract, how each is implemented, and the probe that proves it - plus the three places the shipped system deviates from the contract, and why |
-| [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md) | How the system was built and proven, the verification layers, and the defects the method caught |
-| [`docs/DEMO-RUNBOOK.md`](docs/DEMO-RUNBOOK.md) | The rehearsal script, the personas, the fallback ladder and the eight questions you will be asked |
-| [`docs/VIVA-PREP.md`](docs/VIVA-PREP.md) | Per-module defence sheets and the cross-cutting question bank |
-| [`docs/SUBMISSION-CHECKLIST.md`](docs/SUBMISSION-CHECKLIST.md) | What is submitted, the pre-submission gate, and who presents what |
-| [`verification/verification-matrix.md`](verification/verification-matrix.md) | How each NFR is proven, with the drill evidence for every fix |
-| [`demo/provenance.md`](demo/provenance.md) | The demo corpus: 11 openly-licensed images, their licences and authors, and the model's real verdicts |
-
 ## Installation
 
 Three processes on one machine: the workspace, the engine API, and the queue worker.
@@ -105,12 +89,6 @@ python worker.py
 ```
 
 The workspace is at `app/`, the engine at `sidecar/`, and the schema with its policies at `supabase/migrations/`.
-
-## Contributing
-
-Fork the repository, clone your fork, and create a branch named after your task (`git checkout -b t-006-evidence-registry`). Push the branch to your fork and open a pull request against `main`. Only maintainers merge.
-
-Every pull request passes typecheck, build and tests, carries no secrets, keeps authorization in row level security rather than in application code, and opens each changed file with a comment naming what that file does and which requirement it serves. Fix review findings on the same branch so the pull request updates itself.
 
 ## Issues, Bugs, and Feature Requests
 
